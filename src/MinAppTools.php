@@ -6,7 +6,7 @@
  * Time: 9:37
  */
 
-namespace libs\wx;
+namespace epii\weixin;
 
 
 class MinAppTools

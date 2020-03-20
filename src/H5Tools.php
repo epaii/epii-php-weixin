@@ -1,6 +1,6 @@
 <?php
 
-namespace libs\wx;
+namespace epii\weixin;
 
 use epii\cache\Cache;
 
