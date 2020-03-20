@@ -1,0 +1,20 @@
+{
+  "name": "epii/weixin",
+  "description": "微信常用工具集合",
+  "authors": [
+    {
+      "name": "MrRen Epii",
+      "email": "543169072@qq.com"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=5.3",
+    "epii/cache":">=0.0.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "epii\\weixin\\": "src/"
+    }
+  }
+}
