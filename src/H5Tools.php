@@ -37,18 +37,27 @@ class H5Tools
     {
         $time = time();
         $token = Cache::getCacheForever("ac_token");
+        $need_update = false;
         if (!$token) {
             $token = self::doGet();
-
+            $need_update = true;
 
         } else {
             $token = json_decode($token, true);
             if ((!$token['expires_in']) || ($time - $token['expires_in'] >= 0)) {
                 $token = self::doGet();
+                $need_update = true;
             }
+          
         }
 
-        Cache::setCache("ac_token", json_encode($token, JSON_UNESCAPED_UNICODE));
+        if($need_update){
+            if(isset($token['expires_in'])){
+                $token['expires_in'] = time()+$token['expires_in'];
+            }
+            Cache::setCache("ac_token", json_encode($token, JSON_UNESCAPED_UNICODE));
+        }
+       
         return $token['access_token'];
     }
 
@@ -67,17 +76,26 @@ class H5Tools
     {
         $time = time();
         $token = Cache::getCacheForever("ac_ticket");
+        $need_update = false;
         if (!$token) {
             $token = self::doGetticket();
-
+            $need_update = true;
 
         } else {
             $token = json_decode($token, true);
             if ((!$token['expires_in']) || ($time - $token['expires_in'] >= 0)) {
                 $token = self::doGetticket();
+                $need_update  = true;
             }
         }
-        Cache::setCache("ac_ticket", json_encode($token, JSON_UNESCAPED_UNICODE));
+
+        if($need_update){
+            if(isset($token['expires_in'])){
+                $token['expires_in'] = time()+$token['expires_in'];
+            }
+            Cache::setCache("ac_ticket", json_encode($token, JSON_UNESCAPED_UNICODE));
+        }
+
         return $token['ticket'];
     }
 
