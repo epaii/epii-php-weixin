@@ -162,7 +162,7 @@ class H5Tools
     public static function getMedia($media_id)
     {
         $access_token = Config::getAccessToken();
-        $url = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" . $access_token . "&media_id=" . $media_id;
+        $url = "https://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" . $access_token . "&media_id=" . $media_id;
         return file_get_contents($url);
     }
 
