@@ -9,7 +9,8 @@ class H5Tools
 
     const SCOPE_snsapi_base = "snsapi_base";
     const SCOPE_snsapi_userinfo = "snsapi_userinfo";
-
+    public static $AcGetter = null;
+    public static $AcTokenCache = null;
     public static function init($APPID, $SECRET, $CACHE_DIR)
     {
         Config::init($APPID, $SECRET, $CACHE_DIR);
@@ -29,8 +30,22 @@ class H5Tools
         return ["appId" => self::$APPID, "timestamp" => $timestamp, "nonceStr" => $nonceStr, "signature" => $sha_str];
     }
 
+    public static function setAccessTicketGetter(callable $getter){
+        self::$AcGetter = $getter;
+    }
+
     public static function getTicket()
     {
+
+        if(self::$AcTokenCache){
+            return self::$AcTokenCache;
+        }
+        if(self::$AcGetter && is_callable(self::$AcGetter)){
+            $geter = self::$AcGetter;
+            self::$AcTokenCache =$geter();
+            return self::$AcTokenCache;
+        }
+
         $time = time();
         $token = Cache::getCacheForever("ac_ticket");
         $need_update = false;
