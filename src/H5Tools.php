@@ -13,7 +13,6 @@ class H5Tools
     public static function init($APPID, $SECRET, $CACHE_DIR)
     {
         Config::init($APPID, $SECRET, $CACHE_DIR);
-
     }
 
     public static function getJsConfig($url)
@@ -38,7 +37,6 @@ class H5Tools
         if (!$token) {
             $token = self::doGetticket();
             $need_update = true;
-
         } else {
             $token = json_decode($token, true);
             if ((!$token['expires_in']) || ($time - $token['expires_in'] >= 0)) {
@@ -63,7 +61,6 @@ class H5Tools
         $ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$token}&type=jsapi";
         $ticket_res = http::get_https_url($ticket_url);
         return json_decode($ticket_res, true);
-
     }
 
     public static function getAuthorizeUrl($callback_url, $SCOPE = self::SCOPE_snsapi_base)
@@ -184,4 +181,20 @@ class H5Tools
         }
     }
 
+    /**
+     * 发送模板消息
+     * @apiParam {string} openIds 多个以逗号分割
+     * @apiParam {array} data 发送的数据内容
+     *
+     */
+    public static function pushMbNotice($openIds, $data)
+    {
+        $AccessToken = Config::getAccessToken();
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $AccessToken;
+        $openIdsArr = explode(',', $openIds);
+        foreach ($openIdsArr as $item) {
+            $data['touser'] = $item;
+             http::curl_post($url, json_encode($data, JSON_UNESCAPED_UNICODE));
+        }
+    }
 }

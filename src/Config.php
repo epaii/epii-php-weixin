@@ -9,6 +9,8 @@ class Config{
 
     public static $APPID = '';
     public static $SECRET = '';
+    public static $AcGetter = null;
+    public static $AcTokenCache = null;
     public static function init($APPID, $SECRET, $CACHE_DIR)
     {
         self::$APPID = $APPID;
@@ -26,8 +28,21 @@ class Config{
         }
     }
 
+    public static function setAccessTokenGetter(callable $getter){
+        self::$AcGetter = $getter;
+    }
+
     public static function getAccessToken()
     {
+        if(self::$AcTokenCache){
+            return self::$AcTokenCache;
+        }
+        if(self::$AcGetter && is_callable(self::$AcGetter)){
+            $geter = self::$AcGetter;
+            self::$AcTokenCache =$geter();
+            return self::$AcTokenCache;
+        }
+
         $time = time();
         $token = Cache::getCacheForever("ac_token");
         $need_update = false;
